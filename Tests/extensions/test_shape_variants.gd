@@ -28,12 +28,12 @@ func _test_group_picks_variant_by_tag() -> void:
 
 	var fire_spell := SpellBuilder.new().build(TestFactory.definition(group, fire))
 	check(fire_spell.display_name == "Bola de fogo", "fogo vira Bola de fogo")
-	check(fire_spell.shape == ball, "forma resolvida é a bola")
+	check(fire_spell.parts[0].shape == ball, "forma resolvida é a bola")
 	check(is_equal_approx(fire_spell.cost.amounts.get("mana", 0.0), 5.0), "custo é só o da forma escolhida")
 
 	var earth_spell := SpellBuilder.new().build(TestFactory.definition(group, earth))
 	check(earth_spell.display_name == "Estaca de terra", "terra vira Estaca de terra")
-	check(earth_spell.shape == stake, "forma resolvida é a estaca")
+	check(earth_spell.parts[0].shape == stake, "forma resolvida é a estaca")
 	check(is_equal_approx(earth_spell.cost.amounts.get("mana", 0.0), 3.0), "custo é só o da estaca")
 
 func _test_nested_group() -> void:

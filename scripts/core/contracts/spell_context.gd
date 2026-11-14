@@ -11,20 +11,22 @@ var stats: StatProvider
 var tags: TagProvider
 ## Verifica e cobra custos.
 var payer: CostPayer
-## Encontra alvos dentro de áreas.
+## Encontra alvos a partir de uma área.
 var finder: TargetFinder
 ## Realiza projéteis.
 var launcher: ProjectileLauncher
 ## Repete áreas ao longo do tempo.
 var sustained: SustainedAreaRunner
-## Posição de origem. Vector2, Vector3, célula de grade...
+## Posição de origem. Vector2, Vector3, célula de grade, slot de carta...
 var origin: Variant
-## Direção da mira (ex.: ângulo do mouse).
+## Direção da mira, se o seu jogo tiver essa ideia.
 var direction: Variant
 ## Ponto ou alvo mirado, usado por formas com âncora AIM_POINT.
 var aim_point: Variant
-## Magia em execução. Preenchida pelo SpellCaster antes de disparar a forma.
+## Magia em execução. Preenchida pelo SpellCaster.
 var spell: SpellInstance
+## Parte em execução. Preenchida pelo SpellCaster antes de disparar cada forma.
+var part: SpellPartInstance
 ## Quantas reconjurações encadeadas já aconteceram (proteção contra laço infinito).
 var depth: int = 0
 

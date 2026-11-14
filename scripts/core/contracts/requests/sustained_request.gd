@@ -2,7 +2,7 @@ class_name SustainedRequest
 extends RefCounted
 ## Pedido de área sustentada enviado ao SustainedAreaRunner.
 
-var spell: SpellInstance
+var part: SpellPartInstance
 var ctx: SpellContext
 ## Calculada uma vez na conjuração. Não acompanha o conjurador se ele se mover.
 var area: ResolvedArea

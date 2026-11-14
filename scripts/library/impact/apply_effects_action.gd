@@ -1,13 +1,14 @@
 class_name ApplyEffectsAction
 extends ImpactAction
-## Aplica os efeitos da magia. Com affect_area, usa o raio da área centrada no impacto
-## (via TargetFinder). Sem raio ou sem TargetFinder, usa os alvos diretos do impacto.
+## Aplica os efeitos da parte. Com use_impact_area ligado e a forma tendo impact_area,
+## pergunta ao TargetFinder quem é atingido por essa área centrada no ponto de impacto.
+## Senão, usa os alvos atingidos diretamente.
 
-@export var affect_area: bool = true
+@export var use_impact_area: bool = true
 
-func execute(spell: SpellInstance, ctx: SpellContext, area: ResolvedArea, impact: ProjectileImpact) -> void:
+func execute(part: SpellPartInstance, ctx: SpellContext, impact_area: ResolvedArea, impact: ProjectileImpact) -> void:
 	var targets: Array = impact.targets
-	if affect_area and ctx.finder != null and area.radius > 0.0:
-		targets = ctx.finder.find_targets(area.moved_to(impact.point), ctx)
+	if use_impact_area and ctx.finder != null and not impact_area.is_empty():
+		targets = ctx.finder.find_targets(impact_area.moved_to(impact.point), ctx)
 	for target in targets:
-		spell.apply_to(ctx, target)
+		part.apply_to(ctx, target)

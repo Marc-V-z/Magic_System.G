@@ -1,6 +1,6 @@
 class_name SpellShape
 extends SpellComponent
-## COMO a magia é entregue (projétil, rajada, em si mesmo...).
+## COMO uma parte da magia é entregue (projétil, rajada, em si mesmo...).
 
 ## Onde a magia nasce: no conjurador (padrão) ou no ponto mirado.
 enum Anchor { CASTER, AIM_POINT }
@@ -10,6 +10,8 @@ enum Anchor { CASTER, AIM_POINT }
 ## Multiplica o poder calculado a partir dos elementos.
 @export var power_multiplier: float = 1.0
 @export var anchor: Anchor = Anchor.CASTER
+## Parâmetros padrão desta forma. Cada parte pode sobrescrever (SpellPart.area).
+@export var area: SpellArea
 ## Efeitos da própria forma, aplicados junto com os dos elementos.
 @export var effects: Array[SpellEffect] = []
 
@@ -18,8 +20,9 @@ enum Anchor { CASTER, AIM_POINT }
 func resolve(_elements: Array[SpellElement]) -> SpellShape:
 	return self
 
-## Entrega a magia. Subclasses escolhem alvos e chamam spell.apply_to(ctx, alvo).
-func cast(_spell: SpellInstance, _ctx: SpellContext) -> void:
+## Entrega uma parte da magia. Subclasses acham ou criam os alvos e chamam
+## part.apply_to(ctx, alvo).
+func cast(_part: SpellPartInstance, _ctx: SpellContext) -> void:
 	pass
 
 ## Ponto de origem conforme a âncora. Sem ponto mirado, cai na origem do conjurador.

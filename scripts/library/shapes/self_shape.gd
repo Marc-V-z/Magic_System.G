@@ -1,6 +1,6 @@
 class_name SelfShape
 extends SpellShape
-## Aplica a magia no próprio conjurador (curas, buffs, absorção simples).
+## Aplica a parte no próprio conjurador (curas, buffs, marcas).
 
-func cast(spell: SpellInstance, ctx: SpellContext) -> void:
-	spell.apply_to(ctx, ctx.caster)
+func cast(part: SpellPartInstance, ctx: SpellContext) -> void:
+	part.apply_to(ctx, ctx.caster)

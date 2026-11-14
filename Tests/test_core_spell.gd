@@ -1,10 +1,12 @@
 extends TestCase
-## Testa o núcleo: custos, nome, poder, conjuração. Não usa nenhuma extensão opcional.
+## Testa o núcleo: custos, nomes, partes, poder, conjuração. Não usa extensões opcionais.
 
 func _ready() -> void:
 	print("=== Magic_System.G: testes do núcleo ===")
 	_test_cost_is_summed()
 	_test_names()
+	_test_multi_part_names()
+	_test_shared_elements()
 	_test_cast_pays_cost_and_applies_effect()
 	_test_cast_fails_without_resources()
 	_test_self_shape_hits_caster()
@@ -32,8 +34,35 @@ func _test_names() -> void:
 	spell = SpellBuilder.new().build(definition)
 	check(spell.display_name == "Meteoro", "nome próprio vence o automático")
 
+func _test_multi_part_names() -> void:
+	section("Nome automático com várias partes")
+	var definition := SpellDefinition.new()
+	for element_name in ["fogo", "fogo", "água"]:
+		var element := TestFactory.element(element_name, TestFactory.constant(1.0))
+		definition.parts.append(TestFactory.part(TestFactory.shape("Bola de"), [element]))
+	var spell := SpellBuilder.new().build(definition)
+	check(spell.parts.size() == 3, "a magia tem 3 partes")
+	check(spell.display_name == "Bola de fogo (x2) e Bola de água", "partes iguais são agrupadas no nome")
+	definition.custom_name = "Tiro triplo"
+	spell = SpellBuilder.new().build(definition)
+	check(spell.display_name == "Tiro triplo", "nome próprio vence")
+
+func _test_shared_elements() -> void:
+	section("Elemento compartilhado: vale para todas as partes, custo uma vez")
+	var ember := TestFactory.element("brasa", TestFactory.constant(1.0), {"mana": 1.0})
+	var definition := SpellDefinition.new()
+	definition.elements.append(ember)
+	definition.parts.append(TestFactory.part(TestFactory.shape("Onda de", {"mana": 2.0})))
+	var own := TestFactory.element("gelo", TestFactory.constant(2.0))
+	definition.parts.append(TestFactory.part(TestFactory.shape("Raio de", {"mana": 4.0}), [own]))
+	var spell := SpellBuilder.new().build(definition)
+	check(is_equal_approx(spell.cost.amounts.get("mana", 0.0), 7.0), "mana = 2 + 4 + 1 (brasa conta uma vez)")
+	check(spell.parts[0].elements.size() == 1, "parte 1 tem só o elemento compartilhado")
+	check(spell.parts[1].elements.size() == 2, "parte 2 tem o compartilhado e o próprio")
+	check(spell.display_name == "Onda de brasa e Raio de brasa e gelo", "nome usa os elementos de cada parte")
+
 func _test_cast_pays_cost_and_applies_effect() -> void:
-	section("Conjuração paga o custo e aplica o efeito")
+	section("Conjuração paga o custo uma vez e aplica o efeito")
 	var dummy := TestDummy.new()
 	dummy.stats = {"magic_power": 10.0}
 	dummy.resources = {"mana": 10.0, "hp": 10.0}
@@ -43,7 +72,7 @@ func _test_cast_pays_cost_and_applies_effect() -> void:
 	var ctx := TestFactory.context(dummy)
 	var result := SpellCaster.new().cast(spell, ctx)
 	check(result == SpellCaster.Result.OK, "cast devolveu OK")
-	check(is_equal_approx(spell.compute_power(ctx), 15.0), "poder = 10 * 1.5 = 15")
+	check(is_equal_approx(spell.parts[0].compute_power(ctx), 15.0), "poder = 10 * 1.5 = 15")
 	check(is_equal_approx(dummy.hp, 85.0), "dano aplicado: 100 - 15 = 85")
 	check(is_equal_approx(dummy.resources["mana"], 3.0), "mana 10 - 7 = 3")
 	check(is_equal_approx(dummy.resources["hp"], 8.0), "recurso hp 10 - 2 = 8")

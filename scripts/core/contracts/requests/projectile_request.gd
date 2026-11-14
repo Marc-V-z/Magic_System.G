@@ -2,8 +2,10 @@ class_name ProjectileRequest
 extends RefCounted
 ## Pedido de projétil enviado ao ProjectileLauncher.
 
-var spell: SpellInstance
+## A parte da magia que gerou este projétil (elementos, forma, parâmetros).
+var part: SpellPartInstance
 var ctx: SpellContext
+## Parâmetros do trajeto (números nomeados e rótulos). O jogo interpreta.
 var area: ResolvedArea
 ## Identificador para o jogo escolher a cena ou animação (ex.: &"fireball").
 var projectile_id: StringName
