@@ -8,3 +8,5 @@ extends Resource
 @export var elements: Array[SpellElement] = []
 ## Custo próprio da magia, somado ao da forma e ao dos elementos. Opcional.
 @export var cost: SpellCost
+## Requisitos próprios da magia, somados aos da forma e aos dos elementos. Opcional.
+@export var requirements: Array[SpellRequirement] = []

@@ -4,6 +4,6 @@ extends SpellEffect
 
 @export var multiplier: float = 1.0
 
-func apply(target: Node, power: float, _ctx: SpellContext) -> void:
+func apply(target: Object, power: float, _ctx: SpellContext) -> void:
 	if target != null and target.has_method("take_damage"):
 		target.take_damage(power * multiplier)

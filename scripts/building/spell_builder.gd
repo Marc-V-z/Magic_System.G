@@ -19,12 +19,17 @@ func build(definition: SpellDefinition) -> SpellInstance:
 		return null
 
 	var cost := SpellCost.new().merged_with(definition.cost).merged_with(shape.cost)
+	var requirements: Array[SpellRequirement] = []
+	requirements.append_array(definition.requirements)
+	requirements.append_array(shape.requirements)
 	for element in definition.elements:
 		cost = cost.merged_with(element.cost)
+		requirements.append_array(element.requirements)
 
 	var spell := SpellInstance.new()
 	spell.shape = shape
 	spell.elements = definition.elements
 	spell.cost = cost
+	spell.requirements = requirements
 	spell.display_name = namer.build_name(definition, shape, definition.elements)
 	return spell
