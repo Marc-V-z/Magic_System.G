@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Magic_System.G/Tests/extensions/test_shape_variants.gd" id="1_variants"]
+
+[node name="TestShapeVariants" type="Node"]
+script = ExtResource("1_variants")
